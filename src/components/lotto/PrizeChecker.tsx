@@ -1,5 +1,5 @@
+// components/PrizeChecker.tsx
 import React, { useState } from 'react';
-import clsx from 'clsx';
 import type { Response } from '@/types/lotto';
 import { checkLotteryPrizes } from '@/utils/checkPrize';
 
@@ -45,8 +45,21 @@ const PrizeChecker: React.FC<PrizeCheckerProps> = ({ lottoResponse, isLoading })
         }
     };
 
+    const getResultClasses = () => {
+        const baseClasses = 'mt-4 rounded-lg p-4 text-center text-base font-semibold sm:text-lg';
+
+        if (checkResult.status === 'won') {
+            return `${baseClasses} bg-green-500/20 text-green-300`;
+        }
+        if (checkResult.status === 'lost') {
+            return `${baseClasses} bg-red-500/20 text-red-300`;
+        }
+        return baseClasses;
+    };
+
     return (
-        <div className="my-6 rounded-2xl border border-white/10 bg-white/5 p-5 shadow-xl backdrop-blur-md sm:p-6">
+        <div className="my-6 rounded-2xl border border-white/10 bg-white/5 p-5 
+                    shadow-xl backdrop-blur-md sm:p-6">
             <h3 className="text-center text-xl font-semibold text-white">
                 ตรวจผลรางวัล
             </h3>
@@ -57,19 +70,13 @@ const PrizeChecker: React.FC<PrizeCheckerProps> = ({ lottoResponse, isLoading })
                     maxLength={6}
                     value={checkNumber}
                     onChange={handleInputChange}
-                    onKeyPress={handleKeyPress}
+                    onKeyDown={handleKeyPress}
                     placeholder="กรอกเลข 6 หลัก"
-                    className="flex-grow rounded-lg border border-white/20 bg-black/30 px-4 py-3
-                     text-center text-2xl font-bold tracking-[.2em] text-white
-                     placeholder-gray-400 focus:border-blue-500 focus:outline-none 
-                     focus:ring-1 focus:ring-blue-500 sm:text-3xl"
+                    className="flex-grow rounded-lg border border-white/20 bg-black/30 px-4 py-3 text-center text-2xl font-bold tracking-[.2em] text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 sm:text-3xl"
                 />
                 <button
                     onClick={handleCheckPrize}
-                    className="rounded-lg bg-blue-600 px-6 py-3 text-lg font-semibold text-white
-                     shadow-lg transition-all duration-300
-                     hover:bg-blue-500 active:scale-95 disabled:cursor-not-allowed 
-                     disabled:opacity-50"
+                    className={`rounded-lg bg-blue-600 px-6 py-3 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:bg-blue-500 active:scale-95 ${(checkNumber.length !== 6 || isLoading) ? 'cursor-not-allowed opacity-50' : ''}`}
                     disabled={checkNumber.length !== 6 || isLoading}
                 >
                     ตรวจรางวัล
@@ -77,15 +84,7 @@ const PrizeChecker: React.FC<PrizeCheckerProps> = ({ lottoResponse, isLoading })
             </div>
 
             {checkResult.status !== 'idle' && (
-                <div
-                    className={clsx(
-                        'mt-4 rounded-lg p-4 text-center text-base font-semibold sm:text-lg',
-                        {
-                            'bg-green-500/20 text-green-300': checkResult.status === 'won',
-                            'bg-red-500/20 text-red-300': checkResult.status === 'lost',
-                        }
-                    )}
-                >
+                <div className={getResultClasses()}>
                     <div dangerouslySetInnerHTML={{ __html: checkResult.message }} />
                 </div>
             )}

@@ -1,8 +1,7 @@
-// pages/index.tsx
 "use client"
 import Head from 'next/head';
 import React, { useState, useEffect } from 'react';
-import type { Response, Prizes, RunningNumbers, LottoData } from '../types/lotto';
+import type { Response, LottoData } from '@/types/lotto';
 
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -63,8 +62,7 @@ export default function Home() {
 
         if (!lottoResponse) {
             return (
-                <div className="flex min-h-[60vh] items-center justify-center 
-                        text-lg font-semibold text-yellow-500">
+                <div className="flex min-h-[60vh] items-center justify-center text-lg font-semibold text-yellow-500">
                     ไม่พบข้อมูล 🤷
                 </div>
             );
